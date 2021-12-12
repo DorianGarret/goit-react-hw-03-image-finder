@@ -6,7 +6,6 @@ import { Item, Image } from './ImageGalleryItems.styled';
 export default class ImageGalleryItem extends Component {
   render() {
     const { id, webformatURL, largeImageURL, tags } = this.props.params;
-
     return (
       <Item>
         <Image
@@ -14,6 +13,7 @@ export default class ImageGalleryItem extends Component {
           src={webformatURL}
           alt={tags}
           data-full_size={largeImageURL}
+          onClick={this.props.onClick}
         />
       </Item>
     );
@@ -26,4 +26,5 @@ ImageGalleryItem.propTypes = {
     largeImageURL: PropTypes.string.isRequired,
     tags: PropTypes.string.isRequired,
   }),
+  onClick: PropTypes.func.isRequired,
 };

@@ -11,8 +11,17 @@ const API = new Api();
 export default class ImageGallery extends Component {
   state = {
     images: [],
-    status: 'idle',
+    status: 'pending',
   };
+
+  async componentDidMount() {
+    try {
+      const images = await API.fetchImages();
+      this.setState({ images, status: 'idle' });
+    } catch {
+      toast.error('oops something went wrong');
+    }
+  }
 
   async componentDidUpdate(prevProps, _prevState) {
     const { searchImages } = this.props;
@@ -30,12 +39,10 @@ export default class ImageGallery extends Component {
           toast.error('images not found');
         }
 
-        setTimeout(() => {
-          this.setState({
-            images,
-            status: 'resolved',
-          });
-        }, 3000);
+        this.setState({
+          images,
+          status: 'resolved',
+        });
       } catch {
         toast.error('oops something went wrong');
       }
@@ -46,7 +53,17 @@ export default class ImageGallery extends Component {
     const { images, status } = this.state;
 
     if (status === 'idle') {
-      return <></>;
+      return (
+        <List>
+          {images.map(item => (
+            <ImageGalleryItem
+              key={item.id}
+              params={item}
+              onClick={this.props.onClick}
+            />
+          ))}
+        </List>
+      );
     }
 
     if (status === 'pending') {
@@ -57,7 +74,11 @@ export default class ImageGallery extends Component {
       return (
         <List>
           {images.map(item => (
-            <ImageGalleryItem key={item.id} params={item} />
+            <ImageGalleryItem
+              key={item.id}
+              params={item}
+              onClick={this.props.onClick}
+            />
           ))}
         </List>
       );
@@ -66,4 +87,5 @@ export default class ImageGallery extends Component {
 }
 ImageGallery.propTypes = {
   searchImages: PropTypes.string.isRequired,
+  onClick: PropTypes.func.isRequired,
 };
