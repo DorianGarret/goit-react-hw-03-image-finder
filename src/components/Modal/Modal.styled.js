@@ -1,6 +1,7 @@
 import styled from '@emotion/styled/macro';
 
 export const Overlay = styled.div`
+  z-index: 1200;
   position: fixed;
   top: 0;
   left: 0;

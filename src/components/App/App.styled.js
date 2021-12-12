@@ -11,6 +11,7 @@ export const Container = styled.div`
 `;
 
 export const Header = styled.header`
+  z-index: 1100;
   background-color: var(--bs-primary);
   top: 0;
   left: 0;

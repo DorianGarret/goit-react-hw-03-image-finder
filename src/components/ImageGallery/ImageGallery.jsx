@@ -4,6 +4,7 @@ import { toast } from 'react-toastify';
 import Api from 'pixabay-api/pixabayApi';
 import ImageGalleryItem from 'components/ImageGalleryItem';
 import Loader from 'components/Loader';
+import Button from 'components/Button';
 import { List } from './ImageGallery.styled';
 
 const API = new Api();
@@ -32,6 +33,7 @@ export default class ImageGallery extends Component {
       });
 
       try {
+        API.resetPage();
         API.query = searchImages;
         const images = await API.fetchImages();
 
@@ -49,20 +51,29 @@ export default class ImageGallery extends Component {
     }
   }
 
+  handleLoadMoreImage = async () => {
+    API.incrementPage();
+    const nextPage = await API.fetchImages();
+    this.setState(({ images }) => ({ images: [...images, ...nextPage] }));
+  };
+
   render() {
     const { images, status } = this.state;
 
     if (status === 'idle') {
       return (
-        <List>
-          {images.map(item => (
-            <ImageGalleryItem
-              key={item.id}
-              params={item}
-              onClick={this.props.onClick}
-            />
-          ))}
-        </List>
+        <>
+          <List>
+            {images.map(item => (
+              <ImageGalleryItem
+                key={item.id}
+                params={item}
+                onClick={this.props.onClick}
+              />
+            ))}
+          </List>
+          {images.length > 0 && <Button onClick={this.handleLoadMoreImage} />}
+        </>
       );
     }
 
@@ -72,15 +83,18 @@ export default class ImageGallery extends Component {
 
     if (status === 'resolved') {
       return (
-        <List>
-          {images.map(item => (
-            <ImageGalleryItem
-              key={item.id}
-              params={item}
-              onClick={this.props.onClick}
-            />
-          ))}
-        </List>
+        <>
+          <List>
+            {images.map(item => (
+              <ImageGalleryItem
+                key={item.id}
+                params={item}
+                onClick={this.props.onClick}
+              />
+            ))}
+          </List>
+          {images.length > 0 && <Button onClick={this.handleLoadMoreImage} />}
+        </>
       );
     }
   }
