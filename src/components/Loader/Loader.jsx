@@ -1,4 +1,3 @@
-import React, { Component } from 'react';
 import Spinner from 'react-loader-spinner';
 import styled from '@emotion/styled/macro';
 
