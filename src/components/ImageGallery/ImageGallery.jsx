@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
-import Api from 'pixabay-api/pixabayApi';
+import Api from 'pixabayApi';
 import ImageGalleryItem from 'components/ImageGalleryItem';
 import Loader from 'components/Loader';
 import Button from 'components/Button';
