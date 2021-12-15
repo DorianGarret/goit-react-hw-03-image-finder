@@ -9,16 +9,22 @@ import { List } from './ImageGallery.styled';
 
 const API = new Api();
 
+const status = {
+  IDLE: 'idle',
+  PENDING: 'pending',
+  RESOLVED: 'resolved',
+};
+const { IDLE, PENDING, RESOLVED } = status;
 export default class ImageGallery extends Component {
   state = {
     images: [],
-    status: 'pending',
+    status: PENDING,
   };
 
   async componentDidMount() {
     try {
       const images = await API.fetchImages();
-      this.setState({ images, status: 'idle' });
+      this.setState({ images, status: IDLE });
     } catch {
       toast.error('oops something went wrong');
     }
@@ -29,7 +35,7 @@ export default class ImageGallery extends Component {
 
     if (prevProps.searchImages !== searchImages) {
       this.setState({
-        status: 'pending',
+        status: PENDING,
       });
 
       try {
@@ -43,7 +49,7 @@ export default class ImageGallery extends Component {
 
         this.setState({
           images,
-          status: 'resolved',
+          status: RESOLVED,
         });
       } catch {
         toast.error('oops something went wrong');
@@ -55,12 +61,20 @@ export default class ImageGallery extends Component {
     API.incrementPage();
     const nextPage = await API.fetchImages();
     this.setState(({ images }) => ({ images: [...images, ...nextPage] }));
+    this.scrollDown();
   };
+
+  scrollDown() {
+    window.scrollTo({
+      top: document.documentElement.scrollHeight,
+      behavior: 'smooth',
+    });
+  }
 
   render() {
     const { images, status } = this.state;
 
-    if (status === 'idle') {
+    if (status === IDLE) {
       return (
         <>
           <List>
@@ -77,11 +91,11 @@ export default class ImageGallery extends Component {
       );
     }
 
-    if (status === 'pending') {
+    if (status === PENDING) {
       return <Loader />;
     }
 
-    if (status === 'resolved') {
+    if (status === RESOLVED) {
       return (
         <>
           <List>
