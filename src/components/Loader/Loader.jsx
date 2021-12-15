@@ -8,8 +8,6 @@ const ThreeDots = styled(Spinner)`
   height: 80px;
 `;
 
-export default class Loader extends Component {
-  render() {
-    return <ThreeDots type="ThreeDots" color="#3f51b5" />;
-  }
+export default function Loader() {
+  return <ThreeDots type="ThreeDots" color="#3f51b5" />;
 }
